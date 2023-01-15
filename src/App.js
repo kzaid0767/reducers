@@ -1,25 +1,62 @@
-import logo from './logo.svg';
 import './App.css';
+import { useReducer } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+/* Using useReducer to implement custom hook*/
+
+function useCounter() {
+
+  const [state, dispatch] = useReducer((state, action) => {
+    switch (action.type) {
+      case 'ADD': {
+        return { ...state, count: state.count + 1 }
+      }
+      case 'MINUS': {
+        return { ...state, count: state.count - 1 }
+      }
+      default: {
+        return state
+      }
+    }
+  }, {
+    count: 0
+  })
+
+  return [state, dispatch]
 }
 
+
+
+function Count() {
+  const [state, dispatch] = useCounter()
+
+  let { count } = state
+
+  const add = () => {
+    dispatch({ type: 'ADD' })
+  }
+
+  const subtract = () => {
+    if (count > 0) {
+      dispatch({ type: 'MINUS' })
+    }
+  }
+
+  return (
+    <section>
+      <h2>Counter: Yet Another Counter Example</h2>
+      <div className="counter">
+        <button onClick={subtract}>-</button>
+        <div>{count}</div>
+        <button onClick={add}>+</button>
+      </div>
+    </section>
+  )
+}
+
+const App= ()=>{
+  return <div>
+    <Count />
+  </div>
+}
 export default App;
+
